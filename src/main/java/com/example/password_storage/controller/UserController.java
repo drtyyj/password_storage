@@ -2,10 +2,7 @@ package com.example.password_storage.controller;
 
 import com.example.password_storage.model.User;
 import com.example.password_storage.repository.UserRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -25,4 +22,7 @@ public class UserController {
     public User addOneEmployee(@RequestBody User user) {
         return this.userRepository.save(user);
     }
+
+    @DeleteMapping("/users")
+    public void deleteOneEmployee(@RequestBody String username) { this.userRepository.deleteById(username); }
 }
