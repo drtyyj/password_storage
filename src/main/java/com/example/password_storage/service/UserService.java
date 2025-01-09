@@ -27,6 +27,9 @@ public class UserService {
                 Encryption.hashWithSalt(user);
                 break;
             case 3:
+                Encryption.hashWithPepper(user);
+                break;
+            case 4:
                 Encryption.hashWithSaltPepper(user);
                 break;
             //TODO: what else is needed?
