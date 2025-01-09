@@ -1,8 +1,7 @@
 package com.example.password_storage.util;
 
 import com.example.password_storage.model.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.codec.Hex;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -39,9 +38,10 @@ public class Encryption {
     }
 
     public static void hashWithSalt(User user) {
-        //TODO: hashing with salt should retrieve salt and inject into user object
-        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-        user.setPassword(bcrypt.encode(user.getPassword()));
+        // Generating random salt
+        String salt = BCrypt.gensalt();
+        user.setPassword(BCrypt.hashpw(user.getPassword(), salt));
+        user.setSalt(salt);
     }
 
     public static void hashWithSaltPepper(User user) {
