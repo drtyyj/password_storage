@@ -13,6 +13,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "salt")
+    private String salt;
+
     public User() {
         this.username = "username";
         this.password = "password";
@@ -27,7 +30,19 @@ public class User {
         return this.username;
     }
 
-    public  String getPassword() {
+    public String getPassword() {
         return this.password;
+    }
+
+    public User setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public String getSalt() { return this.salt; }
+
+    public User setSalt(String salt) {
+        this.salt = salt;
+        return this;
     }
 }
