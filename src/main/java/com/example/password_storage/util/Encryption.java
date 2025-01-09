@@ -4,6 +4,7 @@ import com.example.password_storage.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.codec.Hex;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -12,7 +13,6 @@ public class Encryption {
     private static String hashingAlgorithm = "MD5";
 
     public static void hash(User user) {
-        //TODO: hashing of same password should result in same hash
         MessageDigest md;
         try {
             md = MessageDigest.getInstance(hashingAlgorithm);
@@ -20,8 +20,21 @@ public class Encryption {
             throw new RuntimeException(e.getMessage());
         }
         md.update(user.getPassword().getBytes());
-        byte[] digest = md.digest();
-        user.setPassword(Hex.encode(digest).toString());
+
+        byte[] messageDigest = md.digest(user.getPassword().getBytes());
+
+        // Convert byte array into signum representation
+        BigInteger no = new BigInteger(1, messageDigest);
+
+        // Convert message digest into hex value
+        String hashtext = no.toString(16);
+
+        while (hashtext.length() < 32) {
+            hashtext = "0" + hashtext;
+        }
+        
+        System.out.println(hashtext);
+        user.setPassword(hashtext);
 
     }
 
