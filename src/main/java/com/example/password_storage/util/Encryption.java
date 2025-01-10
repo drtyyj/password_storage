@@ -35,7 +35,6 @@ public class Encryption {
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");  
             sha256HMAC.init(secretKey);  
             String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(user.getPassword().getBytes()));  
-            System.out.println(signature);
             user.setPassword(encodeMD5(signature));
         } catch (Exception ex) {  
 
