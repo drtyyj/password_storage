@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+
+    <body>
+
+        <h1 style="text-align: center;">PasswordStorage</h1>
+        <div style="text-align: center;">
+
+        Username:<br>
+        <input type="text" id="username" required>
+        <br>
+        Password:<br>
+        <input type="password" id="password" required>
+        <br><br>
+        <input type="submit" onclick="sendData()" value="register"><br><br>
+        Security Level: <input style="width:50px; text-align: center;" min="0" max="4" type="number" id="level" value="4">
+    </div>
+    <script>
+        function sendData(){
+            if($("#username").val() != "" && $("#password").val() != ""){
+            var obj = { username: $("#username").val(), password: $("#password").val()}
+            $.ajax({url: "http://localhost:8080/users?safetyLevel="+$("#level").val(), type: 'POST', data: JSON.stringify(obj), contentType: "application/json", success: function(data){
+                console.log(data)
+            }});
+        }
+        
+    }
+
+    </script>
+    </body>
+</html>
