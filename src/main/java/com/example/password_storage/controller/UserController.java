@@ -25,4 +25,9 @@ public class UserController {
 
     @DeleteMapping("/users")
     public void deleteAllUsers() { this.userService.deleteAllUsers(); }
+
+    @PutMapping("users")
+    public User verifyUser(@RequestBody User user, @RequestParam("safetyLevel") Integer safetyLevel) {
+        return this.userService.verifyUser(user, safetyLevel);
+    }
 }

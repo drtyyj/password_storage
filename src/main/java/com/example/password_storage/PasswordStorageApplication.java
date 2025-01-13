@@ -19,7 +19,7 @@ public class PasswordStorageApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost").allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE");
+				registry.addMapping("/**").allowedOrigins("http://localhost:63342").allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE");
 			}
 		};
 	}

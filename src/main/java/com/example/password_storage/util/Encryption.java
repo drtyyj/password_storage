@@ -17,9 +17,11 @@ public class Encryption {
     private static String hashingAlgorithm = "MD5";
 
     public static void hash(User user) {
-
         user.setPassword(encodeMD5(user.getPassword()));
+    }
 
+    public static String verifyHash(String password) {
+        return encodeMD5(password);
     }
 
     public static void hashWithSalt(User user) {
@@ -27,6 +29,10 @@ public class Encryption {
         String salt = BCrypt.gensalt();
         user.setPassword(BCrypt.hashpw(user.getPassword(), salt));
         user.setSalt(salt);
+    }
+
+    public static String verifyWithSalt(String password, String salt) {
+        return BCrypt.hashpw(password, salt);
     }
     
     public static void hashWithPepper(User user) {
@@ -41,20 +47,46 @@ public class Encryption {
         }
     }
 
+    public static String verifyWithPepper(String password) {
+        try {
+            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+            sha256HMAC.init(secretKey);
+            String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(password.getBytes()));
+            return encodeMD5(signature);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
     public static void hashWithSaltPepper(User user) {
-        try {  
-            Mac sha256HMAC = Mac.getInstance("HmacSHA256");  
-            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");  
-            sha256HMAC.init(secretKey);  
-            String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(user.getPassword().getBytes()));  
+        try {
+            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+            sha256HMAC.init(secretKey);
+            String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(user.getPassword().getBytes()));
             System.out.println(signature);
             String salt = BCrypt.gensalt();
-            user.setPassword(BCrypt.hashpw(signature,salt));  
+            user.setPassword(BCrypt.hashpw(signature,salt));
             user.setSalt(salt);
-        } catch (Exception ex) {  
+        } catch (Exception ex) {
 
         }
     }
+
+    public static String verifyWithSaltPepper(String password, String salt) {
+        try {
+            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+            sha256HMAC.init(secretKey);
+            String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(password.getBytes()));
+            System.out.println(signature);
+            return BCrypt.hashpw(signature,salt);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
     public static String encodeMD5(String input) {
 
         MessageDigest md;
