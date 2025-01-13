@@ -65,7 +65,7 @@ public class UserService {
                 break;
         }
         if(verifyUser.getPassword().equals(encryptedPassword))
-            return user;
+            return verifyUser;
         else
             return null;
     }

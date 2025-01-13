@@ -3,7 +3,9 @@ package com.example.password_storage.util;
 import com.example.password_storage.model.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -92,23 +94,26 @@ public class Encryption {
         MessageDigest md;
         try {
             md = MessageDigest.getInstance(hashingAlgorithm);
+
+            byte[] bytes = input.getBytes(StandardCharsets.UTF_8);
+            //md.update(bytes);
+
+            byte[] messageDigest = md.digest(bytes);
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+
+            return hashtext;
         } catch(NoSuchAlgorithmException e) {
             throw new RuntimeException(e.getMessage());
         }
-        md.update(input.getBytes());
-
-        byte[] messageDigest = md.digest(input.getBytes());
-
-        // Convert byte array into signum representation
-        BigInteger no = new BigInteger(1, messageDigest);
-
-        // Convert message digest into hex value
-        String hashtext = no.toString(16);
-
-        while (hashtext.length() < 32) {
-            hashtext = "0" + hashtext;
-        }
-        return hashtext;
     }
     //TODO: what else is needed?
 }
