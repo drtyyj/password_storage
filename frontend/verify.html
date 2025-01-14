@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Cybersecurity PasswordStorage</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+        <link rel="stylesheet" type="text/css" href="css/placeholder.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <body>
+        <main class="main">
+            <header>
+                <img class="main-logo" src="logo.png" alt="University of Salzburg">
+                
+            </header>
+            
+            <section>
+
+                    <label for="username">Benutzername</label>
+                    <input id="username" name="username" type="text" autofocus="">
+                        
+                    <label for="password">Passwort</label>
+                    <input type="text" name="password" id="password" value="">
+                    <label for="safetyLevel">Safety Level</label>
+                    <input type="number" min="0" max="4" id="level" value="0">
+                    <div class="grid">
+                        <div class="grid-item">
+                            <button type="submit" name="_eventId_proceed" id="submit" onclick="sendData()">Anmelden</button>
+                        </div>
+                        <div style="text-align: right; display: none;"id="success"><h1 style="display: inline;">Passwort korrekt</h1> <img src="check-lg.svg" style="transform:translateY(10px); filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%);" width="50px"></div>
+                        <div style="text-align: right; display: none;"id="error"><h1 style="display: inline;">Passwort nicht korrekt</h1> <img src="x-square.svg" style="transform:translateY(15px); filter: invert(12%) sepia(76%) saturate(5606%) hue-rotate(359deg) brightness(130%) contrast(124%);" width="50px"></div>
+                    </div>
+                </form>
+            </section>
+        </main>
+        <footer class="footer">
+            <div class="cc">
+                <p>This is a test page dedicated to cybersecurity.</p>
+            </div>
+        </footer>
+        <script>
+            function sendData(){
+                $("#success").hide();
+                $("#error").hide();
+                $("#submit").val('Anmeldung läuft, bitte warten...')
+                if($("#username").val() != "" && $("#password").val() != ""){
+                var obj = { username: $("#username").val(), password: $("#password").val()}
+                $.ajax({url: "http://localhost:8080/users?safetyLevel="+$("#level").val(), type: 'PUT', data: JSON.stringify(obj), contentType: "application/json", success: function(data){
+                    console.log(data)
+                    if($("#username").val() == data.username)
+                        $("#success").show();
+                    else    
+                        $("#error").show();
+                }, error: function(data){
+                    $("#error").show();
+                }});
+            }
+            
+        }
+    
+        </script>
+
+</body></html>
