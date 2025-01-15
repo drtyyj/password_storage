@@ -3,7 +3,6 @@ package com.example.password_storage.util;
 import com.example.password_storage.model.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -11,11 +10,10 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64; 
 
 public class Encryption {
 
-    private static String secret = "123456789";
+    private static String secret = "123456";
     private static String hashingAlgorithm = "MD5";
 
     public static void hash(User user) {
@@ -42,8 +40,9 @@ public class Encryption {
             Mac sha256HMAC = Mac.getInstance("HmacSHA256");  
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");  
             sha256HMAC.init(secretKey);  
-            String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(user.getPassword().getBytes()));  
-            user.setPassword(encodeMD5(signature));
+            BigInteger number = new BigInteger(1, sha256HMAC.doFinal(user.getPassword().getBytes()));  
+            String signature = number.toString(16);
+            user.setPassword(signature);
         } catch (Exception ex) {  
 
         }
@@ -54,8 +53,9 @@ public class Encryption {
             Mac sha256HMAC = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
             sha256HMAC.init(secretKey);
-            String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(password.getBytes()));
-            return encodeMD5(signature);
+            BigInteger number = new BigInteger(1, sha256HMAC.doFinal(password.getBytes()));  
+            String signature = number.toString(16);
+            return signature;
         } catch (Exception ex) {
             return null;
         }
@@ -66,8 +66,8 @@ public class Encryption {
             Mac sha256HMAC = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
             sha256HMAC.init(secretKey);
-            String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(user.getPassword().getBytes()));
-            System.out.println(signature);
+            BigInteger number = new BigInteger(1, sha256HMAC.doFinal(user.getPassword().getBytes()));  
+            String signature = number.toString(16);
             String salt = BCrypt.gensalt();
             user.setPassword(BCrypt.hashpw(signature,salt));
             user.setSalt(salt);
@@ -81,8 +81,8 @@ public class Encryption {
             Mac sha256HMAC = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
             sha256HMAC.init(secretKey);
-            String signature = Base64.getEncoder().encodeToString(sha256HMAC.doFinal(password.getBytes()));
-            System.out.println(signature);
+            BigInteger number = new BigInteger(1, sha256HMAC.doFinal(password.getBytes()));  
+            String signature = number.toString(16);
             return BCrypt.hashpw(signature,salt);
         } catch (Exception ex) {
             return null;
